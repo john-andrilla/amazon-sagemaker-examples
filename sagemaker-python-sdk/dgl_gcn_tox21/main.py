@@ -1,6 +1,8 @@
 import argparse
 import dgl
+import json
 import numpy as np
+import os
 import random
 import torch
 
@@ -151,6 +153,13 @@ def run_an_eval_epoch(args, model, data_loader):
             eval_meter.update(logits, labels, masks)
     return np.mean(eval_meter.roc_auc_score())
 
+def load_sagemaker_config(args):
+    file_path = '/opt/ml/input/config/hyperparameters.json'
+    if os.path.isfile(file_path):
+        with open(file_path, 'r') as f:
+            args.update(json.load(f))
+    return args
+
 def main(args):
     args = setup(args)
 
@@ -211,4 +220,5 @@ def parse_args():
 
 if __name__ == '__main__':
     args = parse_args()
+    args = load_sagemaker_config(args)
     main(args)
