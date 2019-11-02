@@ -159,6 +159,8 @@ def load_sagemaker_config(args):
         with open(file_path, 'r') as f:
             new_args = json.load(f)
             for k, v in new_args.items():
+                if k not in args:
+                    continue
                 if isinstance(args[k], int):
                     v = int(v)
                 if isinstance(args[k], float):
