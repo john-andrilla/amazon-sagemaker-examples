@@ -157,7 +157,13 @@ def load_sagemaker_config(args):
     file_path = '/opt/ml/input/config/hyperparameters.json'
     if os.path.isfile(file_path):
         with open(file_path, 'r') as f:
-            args.update(json.load(f))
+            new_args = json.load(f)
+            for k, v in new_args.items():
+                if isinstance(args[k], int):
+                    v = int(v)
+                if isinstance(args[k], float):
+                    v = float(v)
+                args[k] = v
     return args
 
 def main(args):
