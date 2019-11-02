@@ -196,8 +196,8 @@ def main(args):
 
     stopper.load_checkpoint(model)
     test_score = run_an_eval_epoch(args, model, test_loader)
-    print('Best validation roc-auc {:.4f}'.format(stopper.best_score))
-    print('test roc-auc {:.4f}'.format(test_score))
+    print('Best validation score {:.4f}'.format(stopper.best_score))
+    print('Test score {:.4f}'.format(test_score))
 
 def parse_args():
     parser = argparse.ArgumentParser(description='GCN for Tox21')
