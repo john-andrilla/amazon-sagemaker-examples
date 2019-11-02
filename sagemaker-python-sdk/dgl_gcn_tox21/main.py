@@ -196,6 +196,7 @@ def main(args):
 
     stopper.load_checkpoint(model)
     test_score = run_an_eval_epoch(args, model, test_loader)
+    print('Best validation roc-auc {:.4f}'.format(stopper.best_score))
     print('test roc-auc {:.4f}'.format(test_score))
 
 def parse_args():
