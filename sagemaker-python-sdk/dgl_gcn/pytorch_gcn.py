@@ -144,19 +144,11 @@ def main(args):
     acc = evaluate(model, features, labels, test_mask)
     print("Test Accuracy {:.4f}".format(acc))
 
+    torch.save(model.state_dict(), args.save_path)
+
 import collections
 import warnings
 warnings.filterwarnings("ignore")
-
-def load_sm_conf():
-    # No sagemaker hyperparameters.json exist
-    if os.path.isfile('/opt/ml/input/config/hyperparameters.json') is False:
-        return None
-
-    with open('/opt/ml/input/config/hyperparameters.json', 'r') as f:
-        params = json.load(f)
-
-    return params
 
 def parse_args():
     parser = argparse.ArgumentParser(description='GCN')
@@ -177,23 +169,23 @@ def parse_args():
             help="Weight for L2 loss")
     parser.add_argument("--self-loop", action='store_true',
             help="graph self-loop (default=False)")
+    parser.add_argument("--save-path", type=str, default='./model/gcn.pt',
+            help="path to save model")
     parser.set_defaults(self_loop=False)
 
     return parser.parse_args()
 
 if __name__ == '__main__':
     args = parse_args()
-    params = load_sm_conf()
-    if params != None:
-        args.dataset = str(params["dataset"]) if "dataset" in params else "cora"
-        args.dropout = float(params["dropout"]) if "dropout" in params else 0.5
-        args.gpu = int(params["gpu"]) if "gpu" in params else -1
-        args.lr = float(params["lr"]) if "lr" in params else 3e-2
-        args.n_epochs = int(params["n-epochs"]) if "n-epochs" in params else 200
-        args.n_hidden = int(params["n-hidden"]) if "n-hidden" in params else 16
-        args.n_layers = int(params["n-layers"]) if "n-layers" in params else 1
-        args.weight_decay = float(params["weight-decay"]) if "weight-decay" in params else 5e-4
-        args.self_loop = bool(params["self-loop"]) if "self-loop" in params else False
+
+    num_gpus = int(os.environ['SM_NUM_GPUS'])
+    if num_gpus == 0:
+        args.gpu = -1
+    else:
+        args.gpu = 0
+
+    path = str(os.environ['SM_MODEL_DIR'])
+    args.save_path = os.path.join(path, 'gcn.pt')
 
     print(args)
     main(args)
