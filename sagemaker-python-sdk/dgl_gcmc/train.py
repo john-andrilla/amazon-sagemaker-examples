@@ -223,58 +223,18 @@ def config():
     args = parser.parse_args()
     return args
 
-def load_sm_conf(args):
-    # No sagemaker hyperparameters.json exist
-    if os.path.isfile('/opt/ml/input/config/hyperparameters.json') is False:
-        # Do nothing
-        return
-
-    with open('/opt/ml/input/config/hyperparameters.json', 'r') as f:
-        params = json.load(f)
-
-    args.dataset = int(params["seed"]) if "seed" in params else -1
-    args.ctx = str(params["ctx"]) if "ctx" in params else gpu0
-    args.save_dir = str(params["save_dir"]) if "save_dir" in params else None
-    args.save_id = int(params["save_id"]) if "save_id" in params else None
-    args.silent = True if "silent" in params else False
-    args.data_name = str(params["data_name"]) if "data_name" in params else 'ml-1m'
-    args.data_test_ratio = float(params["data_test_ratio"]) if "data_test_ratio" in params else 0.1
-    args.data_valid_ratio = float(params["data_valid_ratio"]) if "data_valid_ratio" in params else 0.1
-    args.use_one_hot_fea = True if "use_one_hot_fea" in params else False
-    args.model_activation = str(params["model_activation"]) if "model_activation" in params else "leaky"
-    args.gcn_dropout = float(params["gcn_dropout"]) if "gcn_dropout" in params else 0.7
-    args.gcn_agg_norm_symm = bool(params["gcn_agg_norm_symm"]) if "gcn_agg_norm_symm" in params else True
-    args.gcn_agg_units = int(params["gcn_agg_units"]) if "gcn_agg_units" in params else 500
-    args.gcn_agg_accum = str(params["gcn_agg_accum"]) if "gcn_agg_accum" in params else 'sum'
-    args.gcn_out_units = int(params["gcn_out_units"]) if "gcn_out_units" in params else 75
-    # basis is used in weight sharing
-    args.gen_r_num_basis_func = int(params["gen_r_num_basis_func"]) if "gen_r_num_basis_func" in params else 75
-
-    args.train_max_iter = int(params["train_max_iter"]) if "train_max_iter" in params else 2000
-    args.train_log_interval = int(params["train_log_interval"]) if "train_log_interval" in params else 1
-    args.train_valid_interval = int(params["train_valid_interval"]) if "train_valid_interval" in params else 1
-    args.train_optimizer = str(params["train_optimizer"]) if "train_optimizer" in params else "adam"
-    args.train_grad_clip = float(params["train_grad_clip"]) if "train_grad_clip" in params else 1.0
-    args.train_lr = float(params["train_lr"]) if "train_lr" in params else 0.01
-    args.train_min_lr = float(params["train_min_lr"]) if "train_min_lr" in params else 0.001
-    args.train_lr_decay_factor = float(params["train_lr_decay_factor"]) if "train_lr_decay_factor" in params else 0.5
-    args.train_decay_patience = int(params["train_decay_patience"]) if "train_decay_patience" in params else 50
-    args.train_early_stopping_patience = int(params["train_early_stopping_patience"]) if "train_early_stopping_patience" in params else 100
-    args.share_param = bool(params["share_param"]) if "share_param" in params else False
-
 if __name__ == '__main__':
     args = config()
-    load_sm_conf(args)
     
     args.ctx = parse_ctx(args.ctx)[0]
     print(args.ctx)
 
-    ### configure save_fir to save all the info
+    ### configure save_dir to save all the info
     if args.save_dir is None:
         args.save_dir = args.data_name+"_" + ''.join(random.choices(string.ascii_uppercase + string.digits, k=2))
     if args.save_id is None:
         args.save_id = np.random.randint(20)
-    args.save_dir = os.path.join("log", args.save_dir)
+    args.save_dir = os.path.join(os.environ['SM_MODEL_DIR'], args.save_dir)
     if not os.path.isdir(args.save_dir):
         os.makedirs(args.save_dir)
 
