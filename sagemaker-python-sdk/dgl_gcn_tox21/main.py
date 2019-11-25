@@ -44,6 +44,7 @@ class EarlyStopper(object):
             dt = datetime.now()
             filename = 'early_stop_{}_{:02d}-{:02d}-{:02d}.pth'.format(
                 dt.date(), dt.hour, dt.minute, dt.second)
+            filename = os.path.join('/opt/ml/model', filename)
 
         self.patience = patience
         self.counter = 0
