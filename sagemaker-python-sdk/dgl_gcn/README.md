@@ -1,17 +1,15 @@
-# DGL Sagemaker GCN Examples
-We show how to run GCN with Amazon Sagemaker here.
+# Setup Deep Graph Library with Amazon SageMaker to create graph convolutional network examples
+The steps here show how to run graph convolutional network (GCN) with Amazon SageMaker. For more information about Deep Graph Library (DGL) and GCN, see the [DGL documentation](https://docs.dgl.ai).
 
-For more information about DGL and GCN please refer to docs.dgl.ai
+## Setup conda environment for DGL (MXNet backend)
+You can install a conda environment for DGL with MXNet backend with a CPU-build.
 
-## Setup conda env for DGL (MXNet backend)
-Curently we can only install conda env for DGL with MXNet backend with CPU-build.
-
-See following steps:
+To create this, use the following steps:
 ```
 # Clone python3 environment
 conda create --name DGL_py36_mxnet1.5 --clone python3
 
-# Install mxnet and DGL (This is only CPU version)
+# Install MXNet and DGL (This is only CPU version)
 source activate DGL_py36_mxnet1.5
 conda install -c anaconda scipy
 conda install -c anaconda numpy
@@ -21,18 +19,18 @@ conda install -c anaconda mkl_fft==1.0.1 mkl_random==1.0.1
 conda install -c anaconda numpy-base==1.16.0 scikit-learn mxnet=1.5.0
 conda install -c dglteam dgl
 ```
-You can select DGL_py36_mxnet1.5 conda env now.
+You can select DGL_py36_mxnet1.5 conda environment now.
 
-## Setup conda env for DGL (Pytorch backend)
-We can install conda env for DGL with Pytorch backend with GPU-build.
+## Setup a conda environment for DGL (PyTorch backend)
+You can install a conda environment for DGL with PyTorch backend with GPU-build.
 
-See following steps:
+To create this, use the following steps:
 ```
 # Clone python3 environment
 conda create --name DGL_py36_pytorch1.2 --clone python3
 
-# Install pytorch and DGL
+# Install PyTorch and DGL
 conda install --name DGL_py36_pytorch1.2 pytorch=1.2 torchvision -c pytorch
 conda install --name DGL_py36_pytorch1.2 -c dglteam dgl-cuda10.0
 ```
-You can select DGL_py36_pytorch1.2 conda env now.
+You can select DGL_py36_pytorch1.2 conda environment now.
