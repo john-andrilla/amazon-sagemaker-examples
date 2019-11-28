@@ -11,8 +11,8 @@ problems as graph classification problems. The molecular benchmark [MoleculeNet]
 and test set with a 80:10:10 ratio. This tutorial follows that approach.
 
 Use atom descriptors as initial node features. After updating node features as in usual GCN, combine the sum and
-maximum of the updated node (atom) representations for graph (molecule) representations. Finally, use an FNN to 
-make the predictions from the representations.
+maximum of the updated node (atom) representations for graph (molecule) representations. Finally, use a 
+feedforward neural network (FNN) to make the predictions from the representations.
 
 For more information about DGL and GCN, see https://docs.dgl.ai
 
@@ -26,6 +26,7 @@ conda create --name DGL_py36_pytorch1.2_chem --clone python3
 
 # Install PyTorch and DGL
 conda install --name DGL_py36_pytorch1.2_chem pytorch=1.2 torchvision -c pytorch
-conda install --name DGL_py36_pytorch1.2_chem -c dglteam dgl-cuda10.0
+conda install --name DGL_py36_pytorch1.2_chem -c dglteam dgl-cuda10.0=0.4.0
+conda install --name DGL_py36_pytorch1.2_chem -c conda-forge rdkit=2018.09.3
 ```
 You can select DGL_py36_pytorch1.2_chem Conda environment now.
